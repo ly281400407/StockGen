@@ -99,7 +99,28 @@
 			myTreeView.addItem("7", "量柱算法", "2");
 			myTreeView.addItem("8", "涨停统计", "3");
 			myTreeView.addItem("9", "跌停统计", "3");
-			myTreeView.selectItem("3");
+			myTreeView.enableContextMenu(true);
+
+			myTreeView.attachEvent("onContextMenu", function(id, x, y, ev){
+
+				debugger;
+				var myContextMenu = new dhtmlXMenuObject({
+					icons_path: "common/imgs/",
+					context: true,
+					items: [
+						{id: "itemText"},
+						{type: "separator"},
+						{id: "cut", text: "Cut", img: "cut.gif"},
+						{id: "copy", text: "Copy", img: "copy.gif"},
+						{id: "paste", text: "Paste", img: "paste.gif"}
+					]
+				});
+				
+				myContextMenu.setItemText("itemText", myTreeView.getItemText(id));
+				myContextMenu.showContextMenu(x, y);
+				myTreeView.selectItem(id);
+				return false; // prevent default context menu
+			});
 		}
 
 		//初始化主题窗口
