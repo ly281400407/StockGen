@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<menu>
+<Menu>
 	<Command type = "menu" text = "stock">
-		<Command  type = "menu" text = "ÈüÂÖ½ðÓî" parameter = "openStock"/>
-		<Command  type = "menu" text = "ÑÅ»¯¼¯ÍÅ" parameter = "openStock"/>
-		<Command  type = "menu" text = "Ô¶Íû¹È" parameter = "openStock"/>
+		<Command  type = "menu" text = "èµ›è½®é‡‘å®‡" parameter = "openStock"/>
+		<Command  type = "menu" text = "é›…åŒ–é›†å›¢" parameter = "openStock"/>
+		<Command  type = "menu" text = "è¿œæœ›è°·" parameter = "openStock"/>
 	</Command>
 	<Command type = "menu" text = "algorithm">
-		<Command  type = "menu" text = "Á¿ÖùËã·¨" parameter = "openAlgorithm"/>
+		<Command  type = "menu" text = "é‡æŸ±ç®—æ³•" parameter = "openAlgorithm"/>
 	</Command>
 	<Command type = "menu" text = "statistic">
-		<Command  type = "menu" text = "ÕÇÍ£Í³¼Æ" parameter = "openStatistic"/>
-		<Command  type = "menu" text = "µøÍ£Í³¼Æ" parameter = "openStatistic"/>
-	</Command>	
-</menu>
+		<Command  type = "menu" text = "æ¶¨åœç»Ÿè®¡" parameter = "openStatistic"/>
+		<Command  type = "menu" text = "è·Œåœç»Ÿè®¡" parameter = "openStatistic"/>
+	</Command>
+</Menu>
