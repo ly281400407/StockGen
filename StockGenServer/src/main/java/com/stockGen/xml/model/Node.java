@@ -16,7 +16,7 @@ public class Node {
     private Node parent;
 
     //子节点
-    private List<Node> son;
+    private List<Node> items;
 
     //节点属性
     private Map<String, String> attribute;
@@ -25,11 +25,11 @@ public class Node {
      * 添加子节点
      * @param node
      */
-    public void addSon(Node node){
-        if(null == son){
-            son = new ArrayList<Node>();
+    public void addItem(Node node){
+        if(null == items){
+            items = new ArrayList<Node>();
         }
-        son.add(node);
+        items.add(node);
         node.setParent(this);
     }
 
@@ -49,8 +49,8 @@ public class Node {
         this.parent = parent;
     }
 
-    public List<Node> getSon() {
-        return son;
+    public List<Node> getItems() {
+        return items;
     }
 
     public Map<String, String> getAttribute() {

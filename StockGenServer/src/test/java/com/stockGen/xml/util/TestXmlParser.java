@@ -38,7 +38,7 @@ public class TestXmlParser {
         Assert.assertEquals("解析根节点节点名称错误", node.getNodeName(), "Menu");
         Assert.assertEquals("解析根节点attribute错误，根节点attribute长度为0", node.getAttribute().size(), 0);
 
-        List<Node> menuSon = node.getSon();
+        List<Node> menuSon = node.getItems();
         Assert.assertNotEquals("menu节点的子节点不为空", menuSon, null);
         Assert.assertEquals("Menu子节点下存在三个子节点", menuSon.size(), 3);
 

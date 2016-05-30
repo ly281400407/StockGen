@@ -31,7 +31,7 @@ public class Dom4jTest {
         Map<String, Object> elementMap = new HashMap<String, Object>();
 
         //解析当前element的attribute
-        for(Iterator<Attribute> i=root.attributeIterator() ; i.hasNext() ;){
+/*        for(Iterator<Attribute> i=root.attributeIterator() ; i.hasNext() ;){
             Attribute attribute = i.next();
             String name = attribute.getName();
             String value = attribute.getValue();
@@ -48,8 +48,8 @@ public class Dom4jTest {
                 Map<String, Object> sonElementMap = transformationElement(sonElement);
                 sonElements.add(i, sonElementMap);
             }
-            elementMap.put("sonElements", sonElements);
-        }
+            elementMap.put("items", sonElements);
+        }*/
 
         return elementMap;
     }
