@@ -1,0 +1,31 @@
+[
+	{"id":"stock",
+	 "text":"stock",
+	 "items":
+		[
+			{"id":"sljy","text":"赛轮金宇","parameter":"openStock","nodeName":"Command","type":"menu"},
+			{"id":"yhjt","text":"雅化集团","parameter":"openStock","nodeName":"Command","type":"menu"},
+			{"id":"ywg","text":"远望谷","parameter":"openStock","nodeName":"Command","type":"menu"}
+		],
+	 "nodeName":"Command",
+	 "type":"menu"
+	},
+	{"id":"algorithm",
+	 "text":"algorithm",
+	 "items":[
+				{"id":"lzsf","text":"量柱算法","parameter":"openAlgorithm","nodeName":"Command","type":"menu"}
+			],
+	 "nodeName":"Command",
+	 "type":"menu"
+	},
+	{"id":"statistic",
+	 "text":"statistic",
+	 "items":
+		[
+			{"id":"zttj","text":"涨停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"},
+			{"id":"dttj","text":"跌停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"}
+		],
+	 "nodeName":"Command",
+	 "type":"menu"
+	}
+]

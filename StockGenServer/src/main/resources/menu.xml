@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Menu>
+	<Command type = "menu" text = "stock" id="stock">
+		<Command  type = "menu" text = "赛轮金宇" parameter = "openStock" id="sljy"/>
+		<Command  type = "menu" text = "雅化集团" parameter = "openStock" id="yhjt"/>
+		<Command  type = "menu" text = "远望谷" parameter = "openStock" id="ywg"/>
+	</Command>
+	<Command type = "menu" text = "algorithm" id="algorithm">
+		<Command  type = "menu" text = "量柱算法" parameter = "openAlgorithm" id="lzsf"/>
+	</Command>
+	<Command type = "menu" text = "statistic" id="statistic">
+		<Command  type = "menu" text = "涨停统计" parameter = "openStatistic" id="zttj"/>
+		<Command  type = "menu" text = "跌停统计" parameter = "openStatistic" id="dttj"/>
+	</Command>
+</Menu>
