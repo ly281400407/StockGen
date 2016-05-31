@@ -113,7 +113,7 @@ public class XmlParser {
                 Map<String, Object> sonElementMap = transformationElement(sonElement);
                 sonElements.add(i, sonElementMap);
             }
-            elementMap.put("items", sonElements);
+            elementMap.put("item", sonElements);
         }
 
         return elementMap;

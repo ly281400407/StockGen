@@ -88,8 +88,10 @@
 		//初始化导航树
 		function initTree(){
 			var cells = myLayout.cells("a");
-			var myTreeView = cells.attachTreeView();
-			myTreeView.setSkin("dhx_web");
+			var myTree = cells.attachTree();
+			myTree.setSkin("dhx_web");
+//			myTree.setIconsPath("dhtmlx/imgs/dhxtree_material/");
+			myTree.setImagesPath("dhtmlx/imgs/dhxtree_material/");
 /*			myTreeView.addItem("1", "stock");
 			myTreeView.addItem("2", "algorithm");
 			myTreeView.addItem("3", "Statistics");
@@ -99,11 +101,22 @@
 			myTreeView.addItem("7", "量柱算法", "2");
 			myTreeView.addItem("8", "涨停统计", "3");
 			myTreeView.addItem("9", "跌停统计", "3");*/
-			myTreeView.loadStruct([{"id":"stock","text":"stock","items":[{"id":"sljy","text":"赛轮金宇","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"yhjt","text":"雅化集团","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"ywg","text":"远望谷","parameter":"openStock","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"algorithm","text":"algorithm","items":[{"id":"lzsf","text":"量柱算法","parameter":"openAlgorithm","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"statistic","text":"statistic","items":[{"id":"zttj","text":"涨停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"},{"id":"dttj","text":"跌停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"}]);
-			//myTreeView.loadStruct("data/treeView.json");
-			myTreeView.enableContextMenu(true);
+			debugger;
+/*			var string = '{"id":"0","item":[{"id":"stock","text":"stock","item":[{"id":"sljy","text":"赛轮金宇","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"yhjt","text":"雅化集团","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"ywg","text":"远望谷","parameter":"openStock","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"algorithm","text":"algorithm","item":[{"id":"lzsf","text":"量柱算法","parameter":"openAlgorithm","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"statistic","text":"statistic","item":[{"id":"zttj","text":"涨停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"},{"id":"dttj","text":"跌停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"}]}';*/
+			var	string = '{"id":"0","item":[{"id":"stock","text":"stock","item":[{"id":"sljy","text":"赛轮金宇","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"yhjt","text":"雅化集团","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"ywg","text":"远望谷","parameter":"openStock","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"algorithm","text":"algorithm","item":[{"id":"lzsf","text":"量柱算法","parameter":"openAlgorithm","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"statistic","text":"statistic","item":[{"id":"zttj","text":"涨停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"},{"id":"dttj","text":"跌停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"}],"nodeName":"Menu"}';
+			var object = JSON.parse(string);
+			myTree.parse(object,"json");
+			myTree.attachEvent("onDblClick", function(id){
+				debugger;
+				alert(id);
+				var nodeName = myTree.getItemText(id);
+				alert(nodeName);
 
-			myTreeView.attachEvent("onContextMenu", function(id, x, y, ev){
+			});
+			//myTreeView.loadStruct("data/treeView.json");
+			//myTreeView.enableContextMenu(true);
+
+/*			myTreeView.attachEvent("onContextMenu", function(id, x, y, ev){
 
 				debugger;
 				var myContextMenu = new dhtmlXMenuObject({
@@ -122,7 +135,7 @@
 				myContextMenu.showContextMenu(x, y);
 				myTreeView.selectItem(id);
 				return false; // prevent default context menu
-			});
+			});*/
 		}
 
 		//初始化主题窗口

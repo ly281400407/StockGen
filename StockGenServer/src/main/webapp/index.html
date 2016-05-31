@@ -100,15 +100,16 @@
 			$.getJSON('get_Tree_data', function(data){
 				debugger;
 				var treeData = data["data"];
-				//var dataString = data.toString();
 				var cells = myLayout.cells("a");
 				var myTree = cells.attachTree();
 				myTree.setSkin("dhx_web");
-				myTree.load(treeData);
-/*				myTreeView.enableContextMenu(true);*/
-				myTree.attachEvent("onDblClick", function(id, mode){
-					alert("aaa");
+				myTree.setImagesPath("dhtmlx/imgs/dhxtree_material/");
+				myTree.parse(treeData,"json");
+				myTree.attachEvent("onDblClick", function(id){
+					var nodeName = myTree.getItemText(id);
+					alert(nodeName);
 				});
+
 /*				myTreeView.attachEvent("onContextMenu", function(id, x, y, ev){
 					var myContextMenu = new dhtmlXMenuObject({
 						icons_path: "dhtmlx/imgs/imgs/",

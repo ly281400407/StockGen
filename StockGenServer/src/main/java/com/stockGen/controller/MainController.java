@@ -31,7 +31,7 @@ public class MainController {
         try {
             Map<String, Object> data = XmlParser.parseToMap("classpath:menu.xml");
             Map<String, Object> treeViewData = new HashMap<String, Object>();
-            treeViewData.put("data",data.get("items"));
+            treeViewData.put("data",data);
             JSONObject json = JSONObject.fromObject(treeViewData);
             String treeNode = json.toString();
             return json.toString();

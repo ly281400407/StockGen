@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Menu>
+<Menu id="0">
 	<Command type = "menu" text = "stock" id="stock">
 		<Command  type = "menu" text = "赛轮金宇" parameter = "openStock" id="sljy"/>
 		<Command  type = "menu" text = "雅化集团" parameter = "openStock" id="yhjt"/>
