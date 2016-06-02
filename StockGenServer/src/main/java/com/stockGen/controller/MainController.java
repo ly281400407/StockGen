@@ -33,7 +33,6 @@ public class MainController {
             Map<String, Object> treeViewData = new HashMap<String, Object>();
             treeViewData.put("data",data);
             JSONObject json = JSONObject.fromObject(treeViewData);
-            String treeNode = json.toString();
             return json.toString();
         }catch (DocumentException e){
             e.printStackTrace();

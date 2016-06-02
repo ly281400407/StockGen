@@ -90,19 +90,9 @@
 			var cells = myLayout.cells("a");
 			var myTree = cells.attachTree();
 			myTree.setSkin("dhx_web");
-//			myTree.setIconsPath("dhtmlx/imgs/dhxtree_material/");
 			myTree.setImagesPath("dhtmlx/imgs/dhxtree_material/");
-/*			myTreeView.addItem("1", "stock");
-			myTreeView.addItem("2", "algorithm");
-			myTreeView.addItem("3", "Statistics");
-			myTreeView.addItem("4", "赛轮金宇", "1");
-			myTreeView.addItem("5", "雅化集团", "1");
-			myTreeView.addItem("6", "远望谷", "1");
-			myTreeView.addItem("7", "量柱算法", "2");
-			myTreeView.addItem("8", "涨停统计", "3");
-			myTreeView.addItem("9", "跌停统计", "3");*/
 			debugger;
-/*			var string = '{"id":"0","item":[{"id":"stock","text":"stock","item":[{"id":"sljy","text":"赛轮金宇","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"yhjt","text":"雅化集团","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"ywg","text":"远望谷","parameter":"openStock","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"algorithm","text":"algorithm","item":[{"id":"lzsf","text":"量柱算法","parameter":"openAlgorithm","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"statistic","text":"statistic","item":[{"id":"zttj","text":"涨停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"},{"id":"dttj","text":"跌停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"}]}';*/
+
 			var	string = '{"id":"0","item":[{"id":"stock","text":"stock","item":[{"id":"sljy","text":"赛轮金宇","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"yhjt","text":"雅化集团","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"ywg","text":"远望谷","parameter":"openStock","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"algorithm","text":"algorithm","item":[{"id":"lzsf","text":"量柱算法","parameter":"openAlgorithm","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"statistic","text":"statistic","item":[{"id":"zttj","text":"涨停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"},{"id":"dttj","text":"跌停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"}],"nodeName":"Menu"}';
 			var object = JSON.parse(string);
 			myTree.parse(object,"json");
@@ -113,29 +103,6 @@
 				alert(nodeName);
 
 			});
-			//myTreeView.loadStruct("data/treeView.json");
-			//myTreeView.enableContextMenu(true);
-
-/*			myTreeView.attachEvent("onContextMenu", function(id, x, y, ev){
-
-				debugger;
-				var myContextMenu = new dhtmlXMenuObject({
-					icons_path: "dhtmlx/imgs/imgs/",
-					context: true,
-					items: [
-						{id: "itemText"},
-						{type: "separator"},
-						{id: "cut", text: "Cut", img: "cut.gif"},
-						{id: "copy", text: "Copy", img: "copy.gif"},
-						{id: "paste", text: "Paste", img: "paste.gif"}
-					]
-				});
-				
-				myContextMenu.setItemText("itemText", myTreeView.getItemText(id));
-				myContextMenu.showContextMenu(x, y);
-				myTreeView.selectItem(id);
-				return false; // prevent default context menu
-			});*/
 		}
 
 		//初始化主题窗口

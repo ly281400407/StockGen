@@ -87,16 +87,6 @@
 
 		//初始化导航树
 		function initTree(){
-			var url = window.location.host;
-/*			myTreeView.addItem("1", "stock");
-			myTreeView.addItem("2", "algorithm");
-			myTreeView.addItem("3", "Statistics");
-			myTreeView.addItem("4", "赛轮金宇", "1");
-			myTreeView.addItem("5", "雅化集团", "1");
-			myTreeView.addItem("6", "远望谷", "1");
-			myTreeView.addItem("7", "量柱算法", "2");
-			myTreeView.addItem("8", "涨停统计", "3");
-			myTreeView.addItem("9", "跌停统计", "3");*/
 			$.getJSON('get_Tree_data', function(data){
 				debugger;
 				var treeData = data["data"];
@@ -109,25 +99,6 @@
 					var nodeName = myTree.getItemText(id);
 					alert(nodeName);
 				});
-
-/*				myTreeView.attachEvent("onContextMenu", function(id, x, y, ev){
-					var myContextMenu = new dhtmlXMenuObject({
-						icons_path: "dhtmlx/imgs/imgs/",
-						context: true,
-						items: [
-							{id: "itemText"},
-							{type: "separator"},
-							{id: "cut", text: "Cut", img: "cut.gif"},
-							{id: "copy", text: "Copy", img: "copy.gif"},
-							{id: "paste", text: "Paste", img: "paste.gif"}
-						]
-					});
-
-					myContextMenu.setItemText("itemText", myTreeView.getItemText(id));
-					myContextMenu.showContextMenu(x, y);
-					myTreeView.selectItem(id);
-					return false; // prevent default context menu
-				});*/
 			});
 
 		}
