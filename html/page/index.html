@@ -88,21 +88,33 @@
 		//初始化导航树
 		function initTree(){
 			var cells = myLayout.cells("a");
-			var myTree = cells.attachTree();
+			var myTree = cells.attachTree("0");
 			myTree.setSkin("dhx_web");
 			myTree.setImagesPath("dhtmlx/imgs/dhxtree_material/");
 			debugger;
-
-			var	string = '{"id":"0","item":[{"id":"stock","text":"stock","item":[{"id":"sljy","text":"赛轮金宇","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"yhjt","text":"雅化集团","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"ywg","text":"远望谷","parameter":"openStock","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"algorithm","text":"algorithm","item":[{"id":"lzsf","text":"量柱算法","parameter":"openAlgorithm","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"statistic","text":"statistic","item":[{"id":"zttj","text":"涨停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"},{"id":"dttj","text":"跌停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"}],"nodeName":"Menu"}';
+			myTree.insertNewItem("0","test","测试",click("test"),null,null,null,"你好","2");
+			myTree.insertNewItem("test","test2","测试2",click("test"),null,null,null,"他好","2");
+/*			var	string = '{"id":"0","item":[{"id":"stock","text":"stock","item":[{"id":"sljy","text":"赛轮金宇","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"yhjt","text":"雅化集团","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"ywg","text":"远望谷","parameter":"openStock","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"algorithm","text":"algorithm","item":[{"id":"lzsf","text":"量柱算法","parameter":"openAlgorithm","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"statistic","text":"statistic","item":[{"id":"zttj","text":"涨停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"},{"id":"dttj","text":"跌停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"}],"nodeName":"Menu"}';
 			var object = JSON.parse(string);
-			myTree.parse(object,"json");
+			myTree.parse(object,"json");*/
 			myTree.attachEvent("onDblClick", function(id){
 				debugger;
+				var chi = myTree.getAllSubItems("0");
+				var s = $("#test");
+				var countent = $(s).attr("name");
 				alert(id);
 				var nodeName = myTree.getItemText(id);
 				alert(nodeName);
 
 			});
+		}
+
+		function click(id){
+			var o = $("#"+id);
+			o["name"] = "name";
+			$(o).attr("name","1");
+			debugger;
+
 		}
 
 		//初始化主题窗口
