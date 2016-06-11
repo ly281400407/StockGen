@@ -18,201 +18,278 @@
 			width: 99.9%;
 			height: 750px;
 		}
+		div#windowsInstance {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
 	</style>
 	<script>
-		var clientHeight = window.innerHeight;
-		var clientWidth = window.innerWidth;
+		var clientHeight;
+		var clientWidth;
 		var navigationHeight;
 		var viewWidth;
 		var layoutObj;
 		var myLayout;
-		
+		var dhxWins;
+		var myTree;
+
 		function doOnLoad() {
+			clientHeight = document.body.clientHeight;
+			alert(clientHeight);
+			clientWidth = document.body.clientWidth;
+			alert(clientWidth);
 			initMenu();
 			initLayout();
 			initTree();
-			initWindow();
+			initWindowInstance();
 		}
-		
-		//初始化菜单
+
+		/**
+		 *初始化菜单
+		 */
 		function initMenu(){
 			var myMenu = new dhtmlXMenuObject("menuObj");
 			myMenu.setSkin("dhx_web");
 			myMenu.setIconsPath("dhtmlx/imgs/imgs/");
 			myMenu.loadFromHTML("menuData", true);
+			myMenu.attachEvent("onClick", function(id, zoneId, cas){
+				if(id=="verticalTile"){
+					tileWindow("vertical");
+				}else if(id=="horizontalTile"){
+					tileWindow("horizontal");
+				}
+
+			});
 		}
 
-		//初始化布局	
+		/**
+		 * 初始化布局
+		 */
 		function initLayout(){
 			navigationHeight = clientHeight - document.getElementById("menuObj").offsetHeight;
 			layoutObj = document.getElementById("layoutObj");
 			viewWidth = clientWidth - 250;
 			myLayout = new dhtmlXLayoutObject({
-			 
-			    parent:     "layoutObj",    // id/object, parent container where layout will be located
-			    pattern:    "2U",           // string, layout's pattern
-			    skin:       "dhx_web",
-			    offsets: {          // optional, offsets for fullscreen init
-			        top:    5,     // you can specify all four sides
-			        right:  5,     // or only the side where you want to have an offset
-			        bottom: 5,
-			        left:   5
-			    },
-			 
-			    cells: [    // optional, cells configuration according to the pattern
-			                // you can specify only the cells you want to configure
-			                // all params are optional
-			        {
-			            id:             "a",        // id of the cell you want to configure
-			            text:           "navigation",     // header text
-			            header:         true,      // hide header on init
-			            width:          250,        // cell init width
-			            height:         navigationHeight,        // cell init height
-			            collapse:       false,        // collapse on init
-			            fix_size:       [true,null] // fix cell's size, [width,height]
-			        },
-			        {
-			            id:             "b",        // id of the cell you want to configure
-			            text:           "view",     // header text
-			            header:         true,      // hide header on init
-			            width:          viewWidth,        // cell init width
-			            height:         navigationHeight-250,        // cell init height
-			            collapse:       false,        // collapse on init
-			            fix_size:       [true,null] // fix cell's size, [width,height]
-			        }
-			    ]
+
+				parent:     "layoutObj",    // id/object, parent container where layout will be located
+				pattern:    "2U",           // string, layout's pattern
+				skin:       "dhx_web",
+				offsets: {          // optional, offsets for fullscreen init
+					top:    5,     // you can specify all four sides
+					right:  5,     // or only the side where you want to have an offset
+					bottom: 5,
+					left:   5
+				},
+
+				cells: [    // optional, cells configuration according to the pattern
+					// you can specify only the cells you want to configure
+					// all params are optional
+					{
+						id:             "a",        // id of the cell you want to configure
+						text:           "navigation",     // header text
+						header:         true,      // hide header on init
+						width:          250,        // cell init width
+						height:         navigationHeight,        // cell init height
+						collapse:       false,        // collapse on init
+						fix_size:       [false,null] // fix cell's size, [width,height]
+					},
+					{
+						id:             "b",        // id of the cell you want to configure
+						text:           "view",     // header text
+						header:         true,      // hide header on init
+						width:          viewWidth,        // cell init width
+						height:         navigationHeight,        // cell init height
+						collapse:       false,        // collapse on init
+						fix_size:       [false,null] // fix cell's size, [width,height]
+					}
+				]
 			});
 		}
 
 
-		//初始化导航树
+		/**
+		 * 初始化导航树
+		 */
 		function initTree(){
-			$.getJSON('get_Tree_data', function(data){
-				debugger;
-				var treeData = data["data"];
-				var cells = myLayout.cells("a");
-				var myTree = cells.attachTree();
-				myTree.setSkin("dhx_web");
-				myTree.setImagesPath("dhtmlx/imgs/dhxtree_material/");
-				myTree.parse(treeData,"json");
-				myTree.attachEvent("onDblClick", function(id){
-					var nodeName = myTree.getItemText(id);
-					alert(nodeName);
-				});
+			var cells = myLayout.cells("a");
+			myTree = cells.attachTree("0");
+			myTree.setSkin("dhx_web");
+			myTree.setImagesPath("dhtmlx/imgs/dhxtree_material/");
+			myTree.enableTreeImages(true);
+			myTree.enableHighlighting(true);
+
+			loadNavigator("get_navigator_item", "0");
+			myTree.closeAllItems();
+
+			//绑定树节点双击事件
+			myTree.attachEvent("onDblClick", function(id){
+				var hasChild = myTree.getUserData(id, "hasChild");
+				if(hasChild == "true"){
+					var child = myTree.getAllSubItems(id);
+					if(!child){
+						loadNavigator("get_navigator_item",id);
+					}
+				}else{
+					var text = myTree.getItemText(id);
+					var winId = id + "win"
+					createWindow(winId,text);
+				}
+			});
+		}
+
+		/**
+		 * 获取导航树
+		 */
+		function loadNavigator(url,parentId) {
+			$.ajax({
+				url : url,
+				data:{parentId:parentId},
+				type : "get",
+				dataType:"json",
+				success : function (data){
+					debugger;
+					addTreeItem(myTree, parentId, data);
+				},
+				error : function (data) {
+					debugger;
+					alert(data);
+				}
+			});
+		}
+
+		/**
+		 *添加导航树子节点 tree-加载节点树  id-被加载的节点id data-加载数据
+		 **/
+		function addTreeItem(tree, parentId, data){
+			$(data).each(function(){
+
+				//获取必选属性
+				var oj = this;
+				var id = oj.id;
+				delete oj.id;
+				var text = oj.text;
+				delete oj.text;
+				var hasChild = oj.hasChild;
+
+				tree.insertNewItem(parentId,id,text);
+
+				if(hasChild == "true"){
+					tree.setItemImage(id,"folderClosed.gif");
+				}
+
+				//可选属性
+				for(var key in oj){
+					tree.setUserData(id, key, oj[key]);
+				}
+
 			});
 
 		}
 
-		//初始化主题窗口
-		function initWindow(){
-			var divString = "<div id='windowDiv' style='position: relative;height:"+(navigationHeight-250)+"px;width:"+viewWidth+"px;'/>"
-			myLayout.cells("b").attachHTMLString(divString);
-			var dhxWins = new dhtmlXWindows();
-			dhxWins.setSkin("dhx_web");
-			dhxWins.attachViewportTo("windowDiv");
-			var w1 = dhxWins.createWindow("w1", 20, 30, 400, 280);
-			w1.setText("表格");
-			var grid = document.getElementById("tableData");
-			w1.attachObject(grid);
 
-			var w2 = dhxWins.createWindow("w2", 20, 30, 400, 280);
-			w2.setText("k线图");
-			
+		/**
+		 * 创建windows
+		 * @param id
+         * @param text
+         */
+		function createWindow(id,text){
 
-			$.getJSON('https://www.highcharts.com/samples/data/jsonp.php?a=e&filename=aapl-ohlc.json&callback=?', function (data) {
-				debugger;
-		        // create the chart
-		        $("#stockMain").highcharts('StockChart', {
+			var windows = dhxWins.createWindow(id, 20, 30, 700, 560);
+			windows.setText(text);
 
-
-		            rangeSelector : {
-		                selected : 1
-		            },
-
-		            title : {
-		                text : 'AAPL Stock Price'
-		            },
-
-		            series : [{
-		                type : 'candlestick',
-		                name : 'AAPL Stock Price',
-		                data : data,
-		                dataGrouping : {
-		                    units : [
-		                        [
-		                            'week', // unit name
-		                            [1] // allowed multiples
-		                        ], [
-		                            'month',
-		                            [1, 2, 3, 4, 6]
-		                        ]
-		                    ]
-		                }
-		            }]
-		        });
-		        var stockMain = document.getElementById("stockMain");
-		        w2.attachObject(stockMain);	
-
-		    });		
+			$.ajax({
+				url : '/load_grid_data',
+				data:{id:id},
+				type : "get",
+				dataType:"json",
+				success : function (data){
+					createGrid(windows, data);
+				}
+			});
 		}
 
+		/**
+		 * 在window里面创建grid
+		 * @param windows
+         * @param data
+         */
+		function createGrid(windows,data){
+			debugger;
+			var grid = windows.attachGrid();
+			var head = data[0];
+			grid.setHeader(head);
+			grid.init();
+
+			for(var i=1 ; i<data.length ; i++){
+				var row = data[i];
+				var id = row[0];
+				row.splice(0,1);
+				grid.addRow(id, row);
+			}
+		}
+
+		/**
+		 * 初始化windows域
+		 */
+		function initWindowInstance(){
+			myLayout.cells("b").attachObject("windowsInstance");
+			dhxWins = new dhtmlXWindows();
+			dhxWins.setSkin("dhx_web");
+			dhxWins.attachViewportTo("windowsInstance");
+		}
+
+		/**
+		 * 获取窗体个数
+		 * @returns {number}
+         */
+		 function getWindowsCount() {
+			 var p = 0;
+			 dhxWins.forEachWindow(function(){p++;});
+			 return p;
+		 }
+
+		/**
+		 * 平铺窗体
+		 * @param type
+         */
+		function tileWindow(type) {
+			var count = getWindowsCount();
+			if(count > 0) {
+				if ("vertical" == type) {
+					var height = (navigationHeight) / count;
+					var yPosition = 0;
+					dhxWins.forEachWindow(function (win) {
+						win.setDimension(viewWidth-20, height-8);
+						win.setPosition(0, yPosition-5);
+						yPosition += height;
+					});
+				} else if ("horizontal" == type) {
+					var width = viewWidth / count;
+					var xPosition = 0;
+					dhxWins.forEachWindow(function (win) {
+						win.setDimension(width-5, navigationHeight - 20);
+						win.setPosition(xPosition-5, 0);
+						xPosition += width;
+					});
+				}
+			}
+		}
 
 	</script>
 </head>
 <body onload="doOnLoad();">
-	<div id="menuObj"></div>
-	<div id="layoutObj"></div>
- 	<div id="menuData" style="display: none;">
-		<div id="file" text="File">
-			<div id="new" text="New" img="new.gif"></div>
-			<div id="file_sep_1" type="separator"></div>
-			<div id="open" text="Open" img="open.gif"></div>
-			<div id="save" text="Save" img="save.gif"></div>
-			<div id="saveAs" text="Save As..." imgdis="save_as_dis.gif" enabled="false"></div>
-			<div id="file_sep_2" type="separator"></div>
-			<div id="print" text="Print" img="print.gif"></div>
-			<div id="pageSetup" text="Page Setup" imgdis="page_setup_dis.gif" enabled="false"></div>
-			<div id="file_sep_3" type="separator"></div>
-			<div id="close" text="Close" img="close.gif"></div>
-		</div>
-		<div id="m2" text="Edit">
-			<div id="undo" text="Undo" img="undo.gif"></div>
-			<div id="redo" text="Redo" img="redo.gif"></div>
-			<div id="edit_sep_1" type="separator"></div>
-			<div id="selectAll" text="Select All" img="select_all.gif"></div>
-			<div id="edit_sep_2" type="separator"></div>
-			<div id="cut" text="Cut" img="cut.gif"></div>
-			<div id="cpoy" text="Copy" img="copy.gif"></div>
-			<div id="paste" text="Paste" img="paste.gif"></div>
-		</div>
-		<div id="m3" text="Help">
-			<div id="about" text="About..." img="about.gif"></div>
-			<div id="help" text="Help" img="help.gif"></div>
-			<div id="bugReporting" text="Bug Reporting" img="bug_reporting.gif"></div>
-		</div>
-	</div>
-	<div style="display:none;">
-		<table id="tableData" class="dhtmlxGrid">
-			<tr>
-				<td width="150" align="left">Book</td>
-				<td type="co" sort="str">Author</td>
-				<td type="edn" format="0,000.00">Price</td>
-				<td>Sales</td>
-			</tr>
-			<tr>
-				<td width="150" align="left">java</td>
-				<td type="co" sort="str">m.c.a</td>
-				<td type="edn" format="0,000.00">100</td>
-				<td>上海出版社</td>
-			</tr>
-			<tr>
-				<td width="150" align="left">java</td>
-				<td type="co" sort="str">m.c.a</td>
-				<td type="edn" format="0,000.00">100</td>
-				<td>上海出版社</td>
-			</tr>					
-		</table>
-		<div style="display:none" id="stockMain"></div>	
-	</div>
+<div id="menuObj"></div>
+<div id="layoutObj"></div>
+<div id="stockMain" style="display:none"></div>
+<div id="windowsInstance" style="display:none"></div>
+<div id="menuData" style="display: none;">
+	<div id="file" text="计算"></div>
+	<div id="m2" text="暂停"></div>
+	<div id="m3" text="刷新"></div>
+	<div id="verticalTile" text="垂直平铺" ></div>
+	<div id="horizontalTile" text="水平平铺"></div>
+</div>
 </body>
 </html>

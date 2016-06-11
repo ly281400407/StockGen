@@ -11,6 +11,7 @@
 	<link rel="stylesheet" type="text/css" href="dhtmlx/skins/skyblue/dhtmlx.css"/>	
 	<script src="jquery/jquery-1.12.4.min.js"></script>
 	<script src="dhtmlx/dhtmlx.js"></script>
+	<script src="test.js"></script>
 	<script src="https://code.highcharts.com/stock/highstock.js"></script>
 	<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
 	<style>
@@ -18,6 +19,12 @@
 			width: 99.9%;
 			height: 750px;
 		}
+		div#windowsInstance {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}			
 	</style>
 	<script>
 		var clientHeight = window.innerHeight;
@@ -26,12 +33,13 @@
 		var viewWidth;
 		var layoutObj;
 		var myLayout;
+		var dhxWins;
 		
 		function doOnLoad() {
 			initMenu();
 			initLayout();
 			initTree();
-			initWindow();
+			initWindowInstance();
 		}
 		
 		//初始化菜单
@@ -91,45 +99,96 @@
 			var myTree = cells.attachTree("0");
 			myTree.setSkin("dhx_web");
 			myTree.setImagesPath("dhtmlx/imgs/dhxtree_material/");
-			debugger;
-			myTree.insertNewItem("0","test","测试",click("test"),null,null,null,"你好","2");
-			myTree.insertNewItem("test","test2","测试2",click("test"),null,null,null,"他好","2");
-/*			var	string = '{"id":"0","item":[{"id":"stock","text":"stock","item":[{"id":"sljy","text":"赛轮金宇","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"yhjt","text":"雅化集团","parameter":"openStock","nodeName":"Command","type":"menu"},{"id":"ywg","text":"远望谷","parameter":"openStock","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"algorithm","text":"algorithm","item":[{"id":"lzsf","text":"量柱算法","parameter":"openAlgorithm","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"},{"id":"statistic","text":"statistic","item":[{"id":"zttj","text":"涨停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"},{"id":"dttj","text":"跌停统计","parameter":"openStatistic","nodeName":"Command","type":"menu"}],"nodeName":"Command","type":"menu"}],"nodeName":"Menu"}';
-			var object = JSON.parse(string);
-			myTree.parse(object,"json");*/
-			myTree.attachEvent("onDblClick", function(id){
-				debugger;
-				var chi = myTree.getAllSubItems("0");
-				var s = $("#test");
-				var countent = $(s).attr("name");
-				alert(id);
-				var nodeName = myTree.getItemText(id);
-				alert(nodeName);
+			myTree.enableTreeImages(true);
+			myTree.enableHighlighting(true);
 
+			var rootData = loadRoot();
+			loadNode(myTree, "0", rootData);
+			myTree.closeAllItems();
+
+
+			myTree.attachEvent("onDblClick", function(id){
+				var hasChild = myTree.getUserData(id, "hasChild");
+				if(hasChild){
+					var child = myTree.getAllSubItems(id);
+					if(!child){
+						var nodeData = loadByParentid(id);
+						loadNode(myTree, id, nodeData);
+					}
+				}else{
+					var text = myTree.getItemText(id);
+					var winId = id + "win"
+					createWindow(winId,text);
+				}
 			});
 		}
 
-		function click(id){
-			var o = $("#"+id);
-			o["name"] = "name";
-			$(o).attr("name","1");
-			debugger;
+		/**
+		*加载节点 tree-加载节点树  id-被加载的节点id data-加载数据
+		**/
+		function loadNode(tree, parentid, data){
+			$(data).each(function(){
+
+				//获取必选属性
+				var oj = this;
+				var id = oj.id;
+				delete oj.id;
+				var text = oj.text;
+				delete oj.text;
+				var hasChild = oj.hasChild;
+
+				tree.insertNewItem(parentid,id,text);
+
+				if(hasChild){
+					tree.setItemImage(id,"folderClosed.gif");
+				}
+
+				//可选属性
+				for(var key in oj){
+					tree.setUserData(id, key, oj[key]);
+				}
+
+			});
 
 		}
 
-		//初始化主题窗口
-		function initWindow(){
-			var divString = "<div id='windowDiv' style='position: relative;height:"+(navigationHeight-250)+"px;width:"+viewWidth+"px;'/>"
-			myLayout.cells("b").attachHTMLString(divString);
-			var dhxWins = new dhtmlXWindows();
+
+
+		function createWindow(id,text){
+			var windows = dhxWins.createWindow(id, 20, 30, 400, 280);
+			windows.setText(text);
+			var data = loadGridData(id);
+			createGrid(windows, data);
+
+		}
+
+		function createGrid(windows,data){
+			debugger;
+
+			var grid = windows.attachGrid();
+			var head = data[0];
+			grid.setHeader("高量柱,低量柱,高量柱数量,低量柱数量");
+			grid.init();
+			for(var i=1 ; i<data.length ; i++){
+				var row = data[i];
+				var id = row[0];
+				row.splice(0,1);
+				grid.addRow(id, row);
+			}
+		}
+
+		//初始化windows域
+		function initWindowInstance(){
+			myLayout.cells("b").attachObject("windowsInstance");
+			dhxWins = new dhtmlXWindows();
 			dhxWins.setSkin("dhx_web");
-			dhxWins.attachViewportTo("windowDiv");
-			var w1 = dhxWins.createWindow("w1", 20, 30, 400, 280);
+			dhxWins.attachViewportTo("windowsInstance");
+/*			var w1 = dhxWins.createWindow("w1", 20, 30, 400, 280);
 			w1.setText("表格");
 			var grid = document.getElementById("tableData");
-			w1.attachObject(grid);
+			w1.attachObject(grid);*/
 
-			var w2 = dhxWins.createWindow("w2", 20, 30, 400, 280);
+/*			var w2 = dhxWins.createWindow("w2", 20, 30, 400, 280);
 			w2.setText("k线图");
 			
 
@@ -167,43 +226,20 @@
 		        var stockMain = document.getElementById("stockMain");
 		        w2.attachObject(stockMain);	
 
-		    });		
+		    });	*/	
 		}
-
 
 	</script>
 </head>
 <body onload="doOnLoad();">
 	<div id="menuObj"></div>
 	<div id="layoutObj"></div>
+	<div id="stockMain" style="display:none"></div>	
+	<div id="windowsInstance" style="display:none"></div>
  	<div id="menuData" style="display: none;">
-		<div id="file" text="File">
-			<div id="new" text="New" img="new.gif"></div>
-			<div id="file_sep_1" type="separator"></div>
-			<div id="open" text="Open" img="open.gif"></div>
-			<div id="save" text="Save" img="save.gif"></div>
-			<div id="saveAs" text="Save As..." imgdis="save_as_dis.gif" enabled="false"></div>
-			<div id="file_sep_2" type="separator"></div>
-			<div id="print" text="Print" img="print.gif"></div>
-			<div id="pageSetup" text="Page Setup" imgdis="page_setup_dis.gif" enabled="false"></div>
-			<div id="file_sep_3" type="separator"></div>
-			<div id="close" text="Close" img="close.gif"></div>
-		</div>
-		<div id="m2" text="Edit">
-			<div id="undo" text="Undo" img="undo.gif"></div>
-			<div id="redo" text="Redo" img="redo.gif"></div>
-			<div id="edit_sep_1" type="separator"></div>
-			<div id="selectAll" text="Select All" img="select_all.gif"></div>
-			<div id="edit_sep_2" type="separator"></div>
-			<div id="cut" text="Cut" img="cut.gif"></div>
-			<div id="cpoy" text="Copy" img="copy.gif"></div>
-			<div id="paste" text="Paste" img="paste.gif"></div>
-		</div>
-		<div id="m3" text="Help">
-			<div id="about" text="About..." img="about.gif"></div>
-			<div id="help" text="Help" img="help.gif"></div>
-			<div id="bugReporting" text="Bug Reporting" img="bug_reporting.gif"></div>
-		</div>
+		<div id="file" text="计算"></div>
+		<div id="m2" text="暂停"></div>
+		<div id="m3" text="刷新"></div>
 	</div>
 	<div style="display:none;">
 		<table id="tableData" class="dhtmlxGrid">
@@ -226,7 +262,6 @@
 				<td>上海出版社</td>
 			</tr>					
 		</table>
-		<div style="display:none" id="stockMain"></div>	
 	</div>
 </body>
 </html>
