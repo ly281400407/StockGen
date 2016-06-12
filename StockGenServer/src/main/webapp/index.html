@@ -16,7 +16,6 @@
 	<style>
 		div#layoutObj {
 			width: 99.9%;
-			height: 750px;
 		}
 		div#windowsInstance {
 			position: relative;
@@ -28,7 +27,7 @@
 	<script>
 		var clientHeight;
 		var clientWidth;
-		var navigationHeight;
+		var layoutHeight;
 		var viewWidth;
 		var layoutObj;
 		var myLayout;
@@ -36,10 +35,8 @@
 		var myTree;
 
 		function doOnLoad() {
-			clientHeight = document.body.clientHeight;
-			alert(clientHeight);
-			clientWidth = document.body.clientWidth;
-			alert(clientWidth);
+			clientHeight = window.innerHeight;
+			clientWidth = window.innerWidth;
 			initMenu();
 			initLayout();
 			initTree();
@@ -68,17 +65,18 @@
 		 * 初始化布局
 		 */
 		function initLayout(){
-			navigationHeight = clientHeight - document.getElementById("menuObj").offsetHeight;
+			layoutHeight = clientHeight - document.getElementById("menuObj").offsetHeight-20;
 			layoutObj = document.getElementById("layoutObj");
+			$("#layoutObj").css("height", layoutHeight);
 			viewWidth = clientWidth - 250;
 			myLayout = new dhtmlXLayoutObject({
 
 				parent:     "layoutObj",    // id/object, parent container where layout will be located
 				pattern:    "2U",           // string, layout's pattern
 				skin:       "dhx_web",
-				offsets: {          // optional, offsets for fullscreen init
-					top:    5,     // you can specify all four sides
-					right:  5,     // or only the side where you want to have an offset
+				offsets: {
+					top:    5,
+					right:  5,
 					bottom: 5,
 					left:   5
 				},
@@ -91,7 +89,7 @@
 						text:           "navigation",     // header text
 						header:         true,      // hide header on init
 						width:          250,        // cell init width
-						height:         navigationHeight,        // cell init height
+						height:         layoutHeight,        // cell init height
 						collapse:       false,        // collapse on init
 						fix_size:       [false,null] // fix cell's size, [width,height]
 					},
@@ -100,7 +98,7 @@
 						text:           "view",     // header text
 						header:         true,      // hide header on init
 						width:          viewWidth,        // cell init width
-						height:         navigationHeight,        // cell init height
+						height:         layoutHeight,        // cell init height
 						collapse:       false,        // collapse on init
 						fix_size:       [false,null] // fix cell's size, [width,height]
 					}
@@ -258,7 +256,7 @@
 			var count = getWindowsCount();
 			if(count > 0) {
 				if ("vertical" == type) {
-					var height = (navigationHeight) / count;
+					var height = (layoutHeight) / count;
 					var yPosition = 0;
 					dhxWins.forEachWindow(function (win) {
 						win.setDimension(viewWidth-20, height-8);
@@ -269,7 +267,7 @@
 					var width = viewWidth / count;
 					var xPosition = 0;
 					dhxWins.forEachWindow(function (win) {
-						win.setDimension(width-5, navigationHeight - 20);
+						win.setDimension(width-5, layoutHeight - 20);
 						win.setPosition(xPosition-5, 0);
 						xPosition += width;
 					});
