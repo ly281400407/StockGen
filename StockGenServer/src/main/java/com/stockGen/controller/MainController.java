@@ -55,11 +55,13 @@ public class MainController {
             map.put("id", "algorithm");
             map.put("text", "算法");
             map.put("hasChild", "true");
+            map.put("type", "file");
             list.add(map);
 
             Map<String, String> map1 = new HashMap<String, String>();
             map1.put("id", "stock");
             map1.put("text", "股票");
+            map1.put("type", "file");
             map1.put("hasChild", "true");
             list.add(map1);
         }else if("algorithm".equals(id)){
@@ -67,48 +69,56 @@ public class MainController {
             map.put("id", "liangzhu");
             map.put("text", "量柱算法");
             map.put("hasChild", "false");
+            map.put("type", "algorithm");
             list.add(map);
 
             Map<String, String> map1 = new HashMap<String, String>();
             map1.put("id", "paixu");
             map1.put("text", "排序算法");
             map1.put("hasChild", "false");
+            map1.put("type", "algorithm");
             list.add(map1);
         }else if("stock".equals(id)){
             Map<String, String> map = new HashMap<String, String>();
             map.put("id", "huzhi");
             map.put("text", "沪指");
             map.put("hasChild", "true");
+            map.put("type", "file");
             list.add(map);
 
             Map<String, String> map1 = new HashMap<String, String>();
             map1.put("id", "shenzhi");
             map1.put("text", "深指");
             map1.put("hasChild", "true");
+            map1.put("type", "file");
             list.add(map1);
         }else if("shenzhi".equals(id)){
             Map<String, String> map = new HashMap<String, String>();
             map.put("id", "yhjt");
             map.put("text", "雅化集团");
             map.put("hasChild", "false");
+            map.put("type", "stock");
             list.add(map);
 
             Map<String, String> map1 = new HashMap<String, String>();
             map1.put("id", "mhjt");
             map1.put("text", "美好集团");
             map1.put("hasChild", "false");
+            map1.put("type", "stock");
             list.add(map1);
         }else if("huzhi".equals(id)){
             Map<String, String> map = new HashMap<String, String>();
             map.put("id", "zgzc");
             map.put("text", "中国中车");
             map.put("hasChild", "false");
+            map.put("type", "stock");
             list.add(map);
 
             Map<String, String> map1 = new HashMap<String, String>();
             map1.put("id", "ywg");
             map1.put("text", "远望谷");
             map1.put("hasChild", "false");
+            map1.put("type", "stock");
             list.add(map1);
         }
 /*        String result = list.toString();
@@ -120,7 +130,7 @@ public class MainController {
 
     @ResponseBody
     @RequestMapping(value = "load_grid_data")
-    public String loadGridData(HttpServletRequest request) throws UnsupportedEncodingException {
+    public String loadGridData(HttpServletRequest request){
         List result = new ArrayList();
 
         List list = new ArrayList();
@@ -163,6 +173,46 @@ public class MainController {
         result.add(list4);
 
         JSONArray json = JSONArray.fromObject(result);
+        return json.toString();
+    }
+
+    /**
+     * 获取分散算法列表数据
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "load_disperse_data")
+    public String loadDispersedData(HttpServletRequest request){
+
+        List<Object> list = new ArrayList<Object>();
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("id", "disperse1");
+        map.put("text", "分散算法1");
+        list.add(map);
+
+        Map<String, String> map1 = new HashMap<String, String>();
+        map1.put("id", "disperse2");
+        map1.put("text", "分散算法2");
+        list.add(map1);
+
+        Map<String, String> map2 = new HashMap<String, String>();
+        map2.put("id", "disperse3");
+        map2.put("text", "分散算法3");
+        list.add(map2);
+
+        Map<String, String> map3 = new HashMap<String, String>();
+        map3.put("id", "disperse4");
+        map3.put("text", "分散算法4");
+        list.add(map3);
+
+        Map<String, String> map4 = new HashMap<String, String>();
+        map4.put("id", "disperse5");
+        map4.put("text", "分散算法5");
+        list.add(map4);
+
+        JSONArray json = JSONArray.fromObject(list);
         return json.toString();
     }
 }

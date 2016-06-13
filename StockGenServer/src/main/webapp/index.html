@@ -33,25 +33,83 @@
 		var myLayout;
 		var dhxWins;
 		var myTree;
+		var toolBar;
 
 		function doOnLoad() {
 			clientHeight = window.innerHeight;
 			clientWidth = window.innerWidth;
-			initMenu();
+			initToolBar();
+			createDispersedMenu("dispersed");
 			initLayout();
 			initTree();
 			initWindowInstance();
 		}
 
 		/**
+		 * 创建分散算法菜单
+		 **/
+		function createDispersedMenu(parentId) {
+
+			debugger;
+			$.ajax({
+				url : "load_disperse_data",
+				data:"",
+				type : "get",
+				dataType:"json",
+				success : function (data){
+
+					//获取必选属性
+					$(data).each(function(i){
+
+						var oj = this;
+						var id = oj.id;
+						var text = oj.text;
+
+						toolBar.addNewChild(parentId, i, id, text, false, null, null);
+
+					});
+
+				},
+				error : function (data) {
+					debugger;
+					alert(data);
+				}
+			});
+
+
+
+
+		}
+
+		/**
 		 *初始化菜单
 		 */
-		function initMenu(){
-			var myMenu = new dhtmlXMenuObject("menuObj");
-			myMenu.setSkin("dhx_web");
-			myMenu.setIconsPath("dhtmlx/imgs/imgs/");
-			myMenu.loadFromHTML("menuData", true);
-			myMenu.attachEvent("onClick", function(id, zoneId, cas){
+		function initToolBar(){
+
+			toolBar = new dhtmlXMenuObject("menuObj");
+			toolBar.setSkin("dhx_web");
+			toolBar.setIconsPath("dhtmlx/imgs/imgs/");
+			toolBar.loadFromHTML("menuData", true);
+/*			toolBar.attachEvent("onTouch", function () {
+				var selectedId = myTree.getSelectedItemId();
+				var type = myTree.getUserData(selectedId, "type");
+				if("stock" != type){
+					/!*toolBar.hideItem("dispersed");*!/
+					toolBar.hideContextMenu();
+				}else{
+					toolBar.showContextMenu();
+					/!*toolBar.showItem("dispersed");*!/
+				}
+			});*/
+			toolBar.attachEvent("onClick", function(id, zoneId, cas){
+				var selectedId = myTree.getSelectedItemId();
+				var type = myTree.getUserData(selectedId, "type");
+				if("stock" == type){
+					var text = toolBar.getItemText(id);
+					var winId = id + "win"
+					createWindow(winId,text);
+				}
+
 				if(id=="verticalTile"){
 					tileWindow("vertical");
 				}else if(id=="horizontalTile"){
@@ -286,6 +344,7 @@
 	<div id="file" text="计算"></div>
 	<div id="m2" text="暂停"></div>
 	<div id="m3" text="刷新"></div>
+	<div id="dispersed" text="分散算法"></div>
 	<div id="verticalTile" text="垂直平铺" ></div>
 	<div id="horizontalTile" text="水平平铺"></div>
 </div>
